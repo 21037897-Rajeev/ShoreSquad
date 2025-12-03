@@ -1,0 +1,20 @@
+<!-- Simple SVG favicon for ShoreSquad -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0077BE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#20B2AA;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Ocean waves background -->
+  <rect width="32" height="32" fill="url(#oceanGradient)" rx="6"/>
+  
+  <!-- Wave pattern -->
+  <path d="M0 20 Q8 16 16 20 T32 20 V32 H0 Z" fill="#4CBDBD" opacity="0.6"/>
+  <path d="M0 24 Q8 20 16 24 T32 24 V32 H0 Z" fill="#FFFFFF" opacity="0.3"/>
+  
+  <!-- Surfboard/cleanup tool -->
+  <ellipse cx="16" cy="12" rx="2" ry="8" fill="#FF6B6B" transform="rotate(20 16 12)"/>
+  <ellipse cx="16" cy="12" rx="1" ry="6" fill="#FFFFFF" transform="rotate(20 16 12)"/>
+</svg>
