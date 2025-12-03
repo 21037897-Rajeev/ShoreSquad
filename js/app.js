@@ -839,6 +839,10 @@ class ShoreSquadApp {
                 this.handleFindEvents();
             } else if (e.target.matches('#create-event-btn')) {
                 this.handleCreateEvent();
+            } else if (e.target.matches('#join-pasir-ris')) {
+                this.handleJoinPasirRis();
+            } else if (e.target.matches('#share-cleanup')) {
+                this.handleShareCleanup();
             }
         });
 
@@ -934,6 +938,97 @@ class ShoreSquadApp {
         // In production, this would open a modal or navigate to a form
         console.log('Create event flow started');
         this.showNotification('Event creation coming soon! 🚀', 'info');
+    }
+
+    handleJoinPasirRis() {
+        // Handle joining the specific Pasir Ris cleanup event
+        console.log('Joining Pasir Ris Beach cleanup');
+        
+        // In production, this would make an API call to register the user
+        const participantCount = document.querySelector('.cleanup-participants .meta-content strong');
+        if (participantCount) {
+            // Simulate updating participant count
+            const currentText = participantCount.textContent;
+            const currentNumber = parseInt(currentText.match(/\d+/)?.[0] || '47');
+            participantCount.innerHTML = `<strong>Registered:</strong> ${currentNumber + 1} participants`;
+        }
+        
+        this.showNotification('🌊 Awesome! You\'ve joined the Pasir Ris Beach cleanup! See you there! 🏖️', 'success');
+        
+        // Scroll to the cleanup section to show confirmation
+        this.scrollToSection('next-cleanup');
+    }
+
+    handleShareCleanup() {
+        // Handle sharing the cleanup event
+        console.log('Sharing Pasir Ris cleanup event');
+        
+        if (navigator.share) {
+            // Use native Web Share API if available
+            navigator.share({
+                title: 'Join me at Pasir Ris Beach Cleanup!',
+                text: 'Hey! I\'m joining a beach cleanup at Pasir Ris Beach. Want to come help save our oceans? 🌊🏖️',
+                url: window.location.href + '#next-cleanup'
+            }).then(() => {
+                this.showNotification('Thanks for sharing! Let\'s grow our cleanup crew! 📱', 'success');
+            }).catch((error) => {
+                console.log('Share failed:', error);
+                this.fallbackShare();
+            });
+        } else {
+            // Fallback sharing method
+            this.fallbackShare();
+        }
+    }
+
+    fallbackShare() {
+        // Fallback sharing method for browsers without Web Share API
+        const shareText = 'Join me at Pasir Ris Beach Cleanup! 🌊🏖️\n\nDate: Saturday, December 14, 2024\nTime: 9:00 AM - 12:00 PM\nLocation: Pasir Ris Beach, Singapore\n\nLet\'s make waves for cleaner oceans!\n\n' + window.location.href + '#next-cleanup';
+        
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(shareText).then(() => {
+                this.showNotification('Share link copied to clipboard! 📋', 'success');
+            }).catch(() => {
+                this.showManualShare(shareText);
+            });
+        } else {
+            this.showManualShare(shareText);
+        }
+    }
+
+    showManualShare(text) {
+        // Show a modal or alert with the share text for manual copying
+        const modal = document.createElement('div');
+        modal.className = 'share-modal';
+        modal.innerHTML = `
+            <div class="share-modal-content">
+                <h3>Share This Cleanup Event</h3>
+                <textarea readonly class="share-text">${text}</textarea>
+                <div class="share-actions">
+                    <button class="btn btn-primary copy-text">Copy Text</button>
+                    <button class="btn btn-secondary close-modal">Close</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Handle modal interactions
+        modal.querySelector('.copy-text').addEventListener('click', () => {
+            const textarea = modal.querySelector('.share-text');
+            textarea.select();
+            document.execCommand('copy');
+            this.showNotification('Text copied! 📋', 'success');
+            modal.remove();
+        });
+        
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
     }
 
     scrollToSection(sectionId) {
